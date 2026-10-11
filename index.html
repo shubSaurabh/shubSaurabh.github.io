@@ -106,13 +106,23 @@
     </article>
 
     <article class="card">
+      <div class="kicker">ML for AI security · Built at SecurITaaS Pte Ltd</div>
+      <h3>AI risk engine: a fine-tuned ModernBERT encoder</h3>
+      <p>Scores an AI agent's action before it runs. It checks whether the action matches the stated intent, marks prompt-injection
+        spans in untrusted context token by token, and returns a calibrated risk score that sends risky calls to a human.
+        I trained it from scratch with synthetic data, leakage-safe splits and calibration, and it serves on CPU at about 200 ms.</p>
+      <div class="tags"><span class="tag">ModernBERT</span><span class="tag">PyTorch</span><span class="tag">Prompt injection</span><span class="tag">Calibration</span><span class="tag">ONNX</span></div>
+      <div class="links"><a href="projects/risk-engine.html">Case study →</a><span style="color:var(--muted);font-weight:500">Proprietary, no public code</span></div>
+    </article>
+
+    <article class="card">
       <div class="kicker">Privileged access · Built at SecurITaaS Pte Ltd</div>
       <h3>SecretZero: Zero Standing Privilege PAM</h3>
       <ul>
         <li>Short-lived certificates replace stored passwords for administrators.</li>
         <li>Passwordless Windows Server logon through a custom credential provider and an in-house certificate authority.</li>
         <li>A gateway that lets AI agents act only within limits a human has approved.</li>
-        <li>AI analysis of recorded admin sessions with a self-hosted language model.</li>
+        <li>AI analysis of recorded admin sessions with a self-hosted language model, and an <a href="projects/risk-engine.html">AI risk engine</a> for agent actions.</li>
         <li>Inventor on two pending Singapore patent applications.</li>
       </ul>
       <div class="tags"><span class="tag">PAM</span><span class="tag">PKI</span><span class="tag">C++</span><span class="tag">Windows</span><span class="tag">LLM</span></div>
