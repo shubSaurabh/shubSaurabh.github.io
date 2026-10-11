@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>mcp-authz-gateway · Shubham Saurabh</title>
+<meta name="description" content="Case study: a policy, human approval and audit gateway for AI agent tool calls over MCP.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<script src="../theme.js"></script>
+</head>
+<body class="case">
+<nav class="top"><div class="wrap">
+  <a class="brand" href="../">Shubham Saurabh</a>
+  <ul>
+    <li><a href="../#projects">Projects</a></li>
+    <li class="opt"><a href="../#experience">Experience</a></li>
+    <li><a href="../#contact">Contact</a></li>
+    <li><button class="theme-toggle" aria-label="Switch light or dark theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></li>
+  </ul>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <a class="back" href="../#projects">← All projects</a>
+  <p class="eyebrow">Case study · AI agent security</p>
+  <h1>Putting a human and a policy between AI agents and their tools</h1>
+  <p class="lede">mcp-authz-gateway applies the controls we already use for privileged humans (least privilege, just-in-time approval, short-lived grants and an audit trail) to AI agents that act through the Model Context Protocol.</p>
+  <div class="btns"><a class="btn primary" href="https://github.com/shubSaurabh/mcp-authz-gateway">View the code</a></div>
+</div></header>
+<div class="wrap"><article>
+
+<div class="facts">
+  <div><b>21</b><span>automated tests, 5 end-to-end</span></div>
+  <div><b>0</b><span>changes needed to agent or server</span></div>
+  <div><b>1</b><span>dependency (PyYAML)</span></div>
+  <div><b>BSL 1.1</b><span>free to self-host</span></div>
+</div>
+
+<h2>The problem</h2>
+<p>AI agents such as Claude, Cursor and custom agents reach files, shells, databases and SaaS accounts through MCP servers.
+Most of those servers do whatever the agent asks. A single prompt injection hidden in a web page, an issue or a README can
+turn into <code>rm -rf</code>, a leaked <code>.env</code> file or a deleted repository. That is the same standing-privilege
+problem PAM solved for human administrators, and it needs the same answer.</p>
+
+<h2>How it works</h2>
+<div class="diagram" aria-label="Request flow through the gateway">
+<svg viewBox="0 0 720 250"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-arrow"/></marker></defs>
+  <rect class="d-box" x="10" y="90" width="140" height="64" rx="10"/><text class="d-t" x="80" y="118" text-anchor="middle">MCP client</text><text class="d-s" x="80" y="136" text-anchor="middle">Claude · IDE · agent</text>
+  <rect class="d-acc" x="250" y="40" width="220" height="164" rx="12"/><text class="d-t" x="360" y="66" text-anchor="middle">mcp-authz-gateway</text>
+  <text class="d-s" x="272" y="94">1. match policy rule</text><text class="d-s" x="272" y="116">2. allow / deny / ask a human</text>
+  <text class="d-s" x="272" y="138">3. check time-limited grants</text><text class="d-s" x="272" y="160">4. mask secrets in results</text><text class="d-s" x="272" y="182">5. append to hash-chained log</text>
+  <rect class="d-box" x="570" y="90" width="140" height="64" rx="10"/><text class="d-t" x="640" y="118" text-anchor="middle">MCP server</text><text class="d-s" x="640" y="136" text-anchor="middle">filesystem · shell · API</text>
+  <path class="d-line" d="M152 122H246" marker-end="url(#ar)" marker-start="url(#ar)"/><text class="d-s" x="199" y="112" text-anchor="middle">stdio</text>
+  <path class="d-line" d="M472 122H566" marker-end="url(#ar)" marker-start="url(#ar)"/><text class="d-s" x="519" y="112" text-anchor="middle">stdio</text>
+  <rect class="d-box" x="290" y="216" width="140" height="30" rx="8"/><text class="d-s" x="360" y="235" text-anchor="middle">You: approve / deny</text>
+  <path class="d-line" d="M360 214V206" marker-end="url(#ar)"/>
+</svg>
+</div>
+<p>The MCP client launches the gateway instead of the real server, and the gateway launches the real server. It relays
+JSON-RPC in both directions and only intervenes on <code>tools/list</code> (hiding tools that are always denied) and
+<code>tools/call</code> (enforcing policy). Everything else passes through untouched, so it works with any stdio MCP server.</p>
+<pre><code>rules:
+  - name: never touch credentials
+    tools: ["*"]
+    effect: deny
+    when:
+      path: { glob: ["*/.ssh/*", "*/.aws/*", "*.pem", "*/.env"] }
+  - name: shell needs a human
+    tools: [run_command]
+    effect: ask</code></pre>
+
+<h2>Design decisions</h2>
+<ul>
+  <li><b>Fail closed.</b> Conditions on a missing argument, or on a value of the wrong type, never match. Unanswered approvals are denied after a timeout.</li>
+  <li><b>Normalize before matching.</b> Paths are normalized first, so <code>/projects/../../.ssh/id_rsa</code> cannot pass a <code>/projects/**</code> rule.</li>
+  <li><b>No bypass through batching.</b> JSON-RPC batches are split, and every call inside one is checked.</li>
+  <li><b>Approval where the human already is.</b> If the client supports MCP elicitation, the prompt appears inside it. Otherwise the gateway sends a desktop notification and queues the request for a local console or the CLI.</li>
+  <li><b>Just-in-time, not forever.</b> "Allow for 15 minutes" creates a grant that expires on its own and can be revoked, the same model as zero standing privilege for people.</li>
+  <li><b>Harden the approval console.</b> It listens on localhost only and needs a random token in the URL, because any website can send requests to localhost. It also checks the Host header (against DNS rebinding) and sends a strict Content Security Policy.</li>
+  <li><b>Tamper-evident audit.</b> Each record includes the hash of the one before it, so <code>audit --verify</code> detects edited or deleted records. Secrets are masked in arguments before they are logged.</li>
+</ul>
+
+<h2>What it does not do</h2>
+<p>It controls what an agent can <em>ask</em> a server to do. It does not sandbox the server, so servers still need minimal OS
+permissions. A tool that accepts free-form code can only be governed with approvals or regular expressions. The hash chain
+detects changes but cannot stop someone with write access from rewriting the whole log, so ship records to a SIEM when that
+matters. The README lists these limits so nobody relies on more than the gateway provides.</p>
+
+<h2>Testing</h2>
+<p>Unit tests cover the policy engine, rate limits, redaction and the audit chain, including tampering and deletion. End-to-end
+tests start the real gateway process and drive it over stdio against a fake MCP server. They cover allow, deny, hidden tools,
+redaction, queue approval with a grant, timeout, approval through elicitation, and a batch bypass attempt.</p>
+
+<div class="note">This is a from-scratch, public implementation of the human-approved AI agent gateway concept I first designed
+while building SecretZero.</div>
+
+<h2>Next</h2>
+<ul>
+  <li>Streamable HTTP transport with OAuth 2.1 token validation and per-agent identity</li>
+  <li>Grants scoped to specific argument values, and per-session policies</li>
+  <li>OpenTelemetry export and Slack or Teams approvals</li>
+</ul>
+
+</article></div>
+<footer><div class="wrap"><span>© 2026 Shubham Saurabh</span><a href="../">Home</a></div></footer>
+</body>
+</html>

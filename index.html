@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shubham Saurabh</title>
+<meta name="description" content="Security architect and builder: identity, privileged access, data security, post-quantum cryptography and AI agent security. Toronto, Canadian PR.">
+<meta property="og:title" content="Shubham Saurabh, Security Architect">
+<meta property="og:description" content="Identity, privileged access, data security, post-quantum cryptography and AI agent security.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://shubsaurabh.github.io/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="theme.js"></script>
+</head>
+<body>
+<nav class="top"><div class="wrap">
+  <a class="brand" href="#">Shubham Saurabh</a>
+  <ul>
+    <li><a href="#projects">Projects</a></li>
+    <li class="opt"><a href="#writing">Talks</a></li>
+    <li class="opt"><a href="#experience">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><button class="theme-toggle" aria-label="Switch light or dark theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></li>
+  </ul>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <p class="eyebrow">Security architect · Builder</p>
+  <h1>I design and build security for identity, data and AI agents.</h1>
+  <p class="lede">CISSP with 12+ years in cybersecurity across vendor presales (Thales, CA Technologies) and consulting
+    (Accenture, Deloitte). I lead an Asia-Pacific team at Thales, designed post-quantum migration strategy, and built a
+    patent-pending Zero Standing Privilege PAM platform.</p>
+  <div class="meta">
+    <span>Toronto, ON (relocating from Singapore)</span>
+    <span>Canadian Permanent Resident, no sponsorship needed</span>
+  </div>
+  <div class="btns">
+    <a class="btn primary" href="#projects">See projects</a>
+    <a class="btn" href="https://github.com/shubSaurabh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>GitHub</a>
+    <a class="btn" href="https://www.linkedin.com/in/saurabhshubham/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>LinkedIn</a>
+    <a class="btn" href="mailto:shub_sau@live.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="stat"><b>12+ yrs</b><span>in cybersecurity</span></div>
+    <div class="stat"><b>2</b><span>pending patent applications</span></div>
+    <div class="stat"><b>15</b><span>countries covered by my team</span></div>
+    <div class="stat"><b>400K</b><span>servers in my largest PAM deployment</span></div>
+  </div>
+</div>
+
+<section id="projects"><div class="wrap">
+  <h2>Projects</h2>
+  <p class="sub">I recently started making my code public so more people can use it. Each one tackles a common enterprise
+    security problem: AI agents with too much access, cryptography nobody can find, and passwords that never expire.</p>
+  <div class="grid two">
+
+    <article class="card">
+      <div class="kicker">AI agent security · Python</div>
+      <h3>mcp-authz-gateway</h3>
+      <div class="diagram" aria-hidden="true">
+        <svg viewBox="0 0 440 120" role="img">
+          <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-arrow"/></marker></defs>
+          <rect class="d-box" x="6" y="34" width="104" height="48" rx="8"/><text class="d-t" x="58" y="56" text-anchor="middle">AI agent</text><text class="d-s" x="58" y="72" text-anchor="middle">Claude, IDE</text>
+          <rect class="d-acc" x="164" y="22" width="112" height="72" rx="8"/><text class="d-t" x="220" y="48" text-anchor="middle">Gateway</text><text class="d-s" x="220" y="64" text-anchor="middle">policy · approval</text><text class="d-s" x="220" y="80" text-anchor="middle">audit · redaction</text>
+          <rect class="d-box" x="330" y="34" width="104" height="48" rx="8"/><text class="d-t" x="382" y="56" text-anchor="middle">MCP server</text><text class="d-s" x="382" y="72" text-anchor="middle">files, shell, APIs</text>
+          <path class="d-line" d="M112 58H160" marker-end="url(#a1)" marker-start="url(#a1)"/><path class="d-line" d="M278 58H326" marker-end="url(#a1)" marker-start="url(#a1)"/>
+          <text class="d-s" x="220" y="114" text-anchor="middle">a human approves risky calls · grants expire</text>
+        </svg>
+      </div>
+      <p>A gateway between AI agents and the tools they call over the Model Context Protocol. It applies least privilege,
+        just-in-time human approval, short-lived grants, secret redaction and a tamper-evident audit log, with no changes to the
+        agent or the server.</p>
+      <div class="tags"><span class="tag">MCP</span><span class="tag">Agentic AI</span><span class="tag">Zero Trust</span><span class="tag">Audit</span></div>
+      <div class="links"><a href="projects/mcp-authz-gateway.html">Case study →</a><a href="https://github.com/shubSaurabh/mcp-authz-gateway">Code</a></div>
+    </article>
+
+    <article class="card">
+      <div class="kicker">Post-quantum cryptography · Python</div>
+      <h3>cbom-scan</h3>
+      <div class="diagram" aria-hidden="true">
+        <svg viewBox="0 0 440 120" role="img">
+          <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="d-arrow"/></marker></defs>
+          <rect class="d-box" x="6" y="8" width="112" height="28" rx="6"/><text class="d-s" x="62" y="27" text-anchor="middle">code (9 languages)</text>
+          <rect class="d-box" x="6" y="46" width="112" height="28" rx="6"/><text class="d-s" x="62" y="65" text-anchor="middle">configs · certs</text>
+          <rect class="d-box" x="6" y="84" width="112" height="28" rx="6"/><text class="d-s" x="62" y="103" text-anchor="middle">live TLS endpoints</text>
+          <rect class="d-acc" x="164" y="34" width="112" height="52" rx="8"/><text class="d-t" x="220" y="58" text-anchor="middle">cbom-scan</text><text class="d-s" x="220" y="74" text-anchor="middle">classify · score</text>
+          <path class="d-line" d="M120 22C142 22 142 52 160 52" marker-end="url(#a2)"/><path class="d-line" d="M120 60H160" marker-end="url(#a2)"/><path class="d-line" d="M120 98C142 98 142 68 160 68" marker-end="url(#a2)"/>
+          <rect class="d-box" x="324" y="8" width="112" height="28" rx="6"/><text class="d-s" x="380" y="27" text-anchor="middle">CycloneDX CBOM</text>
+          <rect class="d-box" x="324" y="46" width="112" height="28" rx="6"/><text class="d-s" x="380" y="65" text-anchor="middle">SARIF for CI</text>
+          <rect class="d-box" x="324" y="84" width="112" height="28" rx="6"/><text class="d-s" x="380" y="103" text-anchor="middle">readiness score</text>
+          <path class="d-line" d="M278 52C300 52 300 22 314 22" marker-end="url(#a2)"/><path class="d-line" d="M278 60H314" marker-end="url(#a2)"/><path class="d-line" d="M278 68C300 68 300 98 314 98" marker-end="url(#a2)"/>
+        </svg>
+      </div>
+      <p>Finds the cryptography in code, configs, certificates and live TLS endpoints, then produces a CycloneDX CBOM and a
+        post-quantum readiness score. It flags what is broken today, what quantum computers will break, and whether servers already
+        use the ML-KEM hybrid key exchange.</p>
+      <div class="tags"><span class="tag">PQC</span><span class="tag">ML-KEM</span><span class="tag">CBOM</span><span class="tag">DevSecOps</span></div>
+      <div class="links"><a href="projects/cbom-scan.html">Case study →</a><a href="https://github.com/shubSaurabh/cbom-scan">Code</a></div>
+    </article>
+
+    <article class="card">
+      <div class="kicker">Privileged access · Built at SecurITaaS Pte Ltd</div>
+      <h3>SecretZero: Zero Standing Privilege PAM</h3>
+      <ul>
+        <li>Short-lived certificates replace stored passwords for administrators.</li>
+        <li>Passwordless Windows Server logon through a custom credential provider and an in-house certificate authority.</li>
+        <li>A gateway that lets AI agents act only within limits a human has approved.</li>
+        <li>AI analysis of recorded admin sessions with a self-hosted language model.</li>
+        <li>Inventor on two pending Singapore patent applications.</li>
+      </ul>
+      <div class="tags"><span class="tag">PAM</span><span class="tag">PKI</span><span class="tag">C++</span><span class="tag">Windows</span><span class="tag">LLM</span></div>
+      <div class="links"><a href="projects/secretzero.html">Case study →</a><a href="https://github.com/shubSaurabh/secretzerofido">Passwordless RDP code</a></div>
+    </article>
+
+    <article class="card">
+      <div class="kicker">Data protection · Python · SecurITaaS Pte Ltd</div>
+      <h3>gicsfs: secure file storage CLI</h3>
+      <p>A command-line file vault that encrypts files with AES-256 and keeps metadata in a SQLCipher-encrypted database. Access is
+        split into two layers: a master password unlocks the CLI and derives the database key, and GitHub OAuth (authorization code
+        flow) authorizes file operations per user.</p>
+      <div class="tags"><span class="tag">AES-256</span><span class="tag">OAuth 2.0</span><span class="tag">SQLCipher</span><span class="tag">Key derivation</span></div>
+      <div class="links"><a href="https://github.com/shubSaurabh/gicsfs">Code</a></div>
+    </article>
+
+  </div>
+</div></section>
+
+<section id="writing"><div class="wrap writing">
+  <h2>Talks and writing</h2>
+  <p class="sub">Post-quantum cryptography and secure AI-assisted development.</p>
+  <a class="item" href="https://lnkd.in/p/g2QiSvfu"><b>Talk: post-quantum cryptography</b><span>LinkedIn</span></a>
+  <a class="item" href="https://lnkd.in/p/gKFQVkE7"><b>Post-quantum cryptography and quantum key distribution</b><span>LinkedIn post</span></a>
+  <a class="item" href="https://lnkd.in/p/gzeMpS9g"><b>Secure AI vibe coding on Android</b><span>LinkedIn post</span></a>
+</div></section>
+
+<section id="experience"><div class="wrap">
+  <h2>Experience</h2>
+  <p class="sub">Vendor presales and consulting across identity, privileged access and data protection, mostly for banks and governments.</p>
+  <ul class="timeline">
+    <li><div class="when">Feb 2022 – Present</div><div class="role"><b>Principal Consultant / Presales Manager</b><span>Thales · Singapore</span>
+      <p>Lead a team of four covering 15 countries in Asia-Pacific, supporting about USD 10M in annual pipeline. Final technical escalation
+        point for cloud data security on AWS, Azure and GCP. Designed a PQC migration strategy from discovery to migration. Technical lead
+        on a USD 1.9M deal with the largest bank in ANZ.</p></div></li>
+    <li><div class="when">H1 2025</div><div class="role"><b>Part-time Architect</b><span>SecurITaaS Pte Ltd (SecretZero) · Singapore</span>
+      <p>Built a Zero Standing Privilege PAM platform, passwordless Windows logon and an AI agent gateway. Two pending patent applications.</p></div></li>
+    <li><div class="when">Aug 2019 – Feb 2022</div><div class="role"><b>Consulting Manager</b><span>Accenture · Singapore</span>
+      <p>Led security and IAM delivery on programs across 10 ASEAN countries for global financial services clients.</p></div></li>
+    <li><div class="when">Dec 2018 – Aug 2019</div><div class="role"><b>Senior Consultant</b><span>Deloitte · Singapore</span>
+      <p>Led a ForgeRock customer identity (CIAM) rollout for a major Singapore bank serving 3M+ digital banking users.</p></div></li>
+    <li><div class="when">Nov 2015 – Nov 2018</div><div class="role"><b>Presales Consultant</b><span>CA Technologies · Singapore</span>
+      <p>Delivered 10+ CA Privileged Access Manager deployments, the largest covering 400K servers across 6 countries for a Swiss bank.
+        Built Java and Python integrations.</p></div></li>
+    <li><div class="when">Nov 2013 – Oct 2015</div><div class="role"><b>Senior Analyst</b><span>HCL Technologies</span>
+      <p>Deployed security and cloud solutions for US and UK clients.</p></div></li>
+  </ul>
+</div></section>
+
+<section id="credentials"><div class="wrap">
+  <h2>Certifications</h2>
+  <div class="pills" style="margin-top:16px">
+    <span class="pill">CISSP</span><span class="pill">AWS Certified Solutions Architect</span><span class="pill">DeepLearning.AI Machine Learning</span>
+    <span class="pill">CA PAM Proven Professional</span><span class="pill">ITIL v3</span><span class="pill">B.Tech, Electronics &amp; Communications, Amity University</span>
+  </div>
+</div></section>
+
+<section id="contact"><div class="wrap">
+  <h2>Get in touch</h2>
+  <p class="sub">Open to solutions architect, security architect and AI security engineering roles in Canada or remote from Canada.</p>
+  <div class="btns">
+    <a class="btn primary" href="mailto:shub_sau@live.com">shub_sau@live.com</a>
+    <a class="btn" href="https://www.linkedin.com/in/saurabhshubham/">LinkedIn</a>
+    <a class="btn" href="https://github.com/shubSaurabh">GitHub</a>
+  </div>
+</div></section>
+
+<footer><div class="wrap"><span>© 2026 Shubham Saurabh</span><span>Toronto, Canada</span></div></footer>
+</body>
+</html>

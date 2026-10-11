@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cbom-scan · Shubham Saurabh</title>
+<meta name="description" content="Case study: a cryptography inventory and post-quantum readiness scanner producing CycloneDX CBOMs.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+<script src="../theme.js"></script>
+</head>
+<body class="case">
+<nav class="top"><div class="wrap">
+  <a class="brand" href="../">Shubham Saurabh</a>
+  <ul>
+    <li><a href="../#projects">Projects</a></li>
+    <li class="opt"><a href="../#experience">Experience</a></li>
+    <li><a href="../#contact">Contact</a></li>
+    <li><button class="theme-toggle" aria-label="Switch light or dark theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></li>
+  </ul>
+</div></nav>
+<header class="hero"><div class="wrap">
+  <a class="back" href="../#projects">← All projects</a>
+  <p class="eyebrow">Case study · Post-quantum cryptography</p>
+  <h1>You can't migrate cryptography you can't find</h1>
+  <p class="lede">cbom-scan builds a cryptography inventory from code, configs, certificates and live TLS endpoints in seconds, then turns it into a CycloneDX CBOM, CI findings and a post-quantum readiness score.</p>
+  <div class="btns"><a class="btn primary" href="https://github.com/shubSaurabh/cbom-scan">View the code</a><a class="btn" href="https://github.com/shubSaurabh/cbom-scan/blob/main/examples/sample-report.md">Sample report</a></div>
+</div></header>
+<div class="wrap"><article>
+
+<div class="facts">
+  <div><b>9</b><span>languages, plus configs and certificates</span></div>
+  <div><b>3</b><span>outputs: CBOM, SARIF, Markdown</span></div>
+  <div><b>0</b><span>errors against the CycloneDX 1.6 schema</span></div>
+  <div><b>~5 s</b><span>to scan 626 files of Python's standard library</span></div>
+</div>
+
+<h2>The problem</h2>
+<p>NIST plans to deprecate RSA and elliptic-curve cryptography from 2030 and disallow it by 2035. Data encrypted today with RSA
+or ECDH can be recorded now and decrypted once a large quantum computer exists ("harvest now, decrypt later"). Every PQC
+migration strategy, including the discovery-to-migration approach I designed at Thales, starts with discovery. That is hard
+because cryptography is spread across source code, libraries, server configs, certificates and network endpoints.</p>
+
+<h2>How it works</h2>
+<div class="diagram" aria-label="Sources, classification and outputs">
+<svg viewBox="0 0 720 230"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-arrow"/></marker></defs>
+  <rect class="d-box" x="10" y="14" width="180" height="40" rx="8"/><text class="d-s" x="100" y="39" text-anchor="middle">Source code · 9 languages</text>
+  <rect class="d-box" x="10" y="66" width="180" height="40" rx="8"/><text class="d-s" x="100" y="91" text-anchor="middle">nginx · Apache · sshd · OpenSSL</text>
+  <rect class="d-box" x="10" y="118" width="180" height="40" rx="8"/><text class="d-s" x="100" y="143" text-anchor="middle">Certificates · keys · keystores</text>
+  <rect class="d-box" x="10" y="170" width="180" height="40" rx="8"/><text class="d-s" x="100" y="195" text-anchor="middle">Live TLS (OpenSSL 3.5 probe)</text>
+  <rect class="d-acc" x="270" y="56" width="180" height="112" rx="12"/><text class="d-t" x="360" y="84" text-anchor="middle">Classify each asset</text>
+  <text class="d-s" x="290" y="108">Broken today</text><text class="d-s" x="290" y="128">Quantum-vulnerable</text><text class="d-s" x="290" y="148">Quantum-weakened · OK</text>
+  <path class="d-line" d="M192 34C232 34 232 90 266 90" marker-end="url(#ar)"/><path class="d-line" d="M192 86C230 86 230 104 266 104" marker-end="url(#ar)"/>
+  <path class="d-line" d="M192 138C230 138 230 120 266 120" marker-end="url(#ar)"/><path class="d-line" d="M192 190C232 190 232 134 266 134" marker-end="url(#ar)"/>
+  <rect class="d-box" x="530" y="30" width="180" height="40" rx="8"/><text class="d-s" x="620" y="55" text-anchor="middle">CycloneDX 1.6 CBOM</text>
+  <rect class="d-box" x="530" y="92" width="180" height="40" rx="8"/><text class="d-s" x="620" y="117" text-anchor="middle">SARIF → GitHub code scanning</text>
+  <rect class="d-box" x="530" y="154" width="180" height="40" rx="8"/><text class="d-s" x="620" y="179" text-anchor="middle">Report + readiness score</text>
+  <path class="d-line" d="M452 96C492 96 492 50 526 50" marker-end="url(#ar)"/><path class="d-line" d="M452 112H526" marker-end="url(#ar)"/><path class="d-line" d="M452 128C492 128 492 174 526 174" marker-end="url(#ar)"/>
+</svg>
+</div>
+<p>Rules understand how each ecosystem names algorithms: Java <code>Cipher.getInstance("AES/ECB/PKCS5Padding")</code>, Node
+<code>generateKeyPairSync("rsa", { modulusLength: 3072 })</code> (with the size on a later line), OpenSSL
+<code>EVP_des_ede3_cbc()</code>, JWT <code>RS256</code>, TLS cipher suites in both OpenSSL and IANA naming, SSH
+<code>KexAlgorithms</code>, and the new post-quantum names such as <code>ML-KEM-768</code>, <code>X25519MLKEM768</code> and
+<code>mlkem768x25519-sha256</code>. Certificates and keys are parsed for type, size, signature algorithm and expiry.</p>
+
+<h2>Design decisions</h2>
+<ul>
+  <li><b>Standards first.</b> The output is a CycloneDX 1.6 CBOM with primitives, parameter sets, curves, modes, NIST quantum security levels and OIDs. Certificates link to their key and signature algorithms, and every occurrence carries file and line. It validates against the official schema, so it works with existing CBOM tooling.</li>
+  <li><b>Live endpoints, not just code.</b> Python's TLS library cannot choose key-exchange groups, so the probe uses OpenSSL 3.5 to check whether a server agrees to the ML-KEM hybrid and whether it still accepts TLS 1.0 or 1.1.</li>
+  <li><b>An explainable score.</b> Readiness is a simple, documented formula (points off per broken or quantum-vulnerable family, a bonus if PQC is already in use), so teams can track it in CI instead of arguing about a black box.</li>
+  <li><b>Tuned on real code.</b> Running it against Python's standard library showed that the TLS rules flagged code that only <em>defines</em> constants like <code>CERT_NONE</code>. They now fire only when code actually <em>sets</em> insecure values, and an inline <code>cbom-scan: ignore</code> marker handles deliberate cases.</li>
+  <li><b>No secrets in the repo.</b> Test certificates and private keys are generated during the test run instead of being committed.</li>
+</ul>
+
+<h2>Example finding</h2>
+<p>On its first live test, the probe confirmed that a major CDN negotiates <code>X25519MLKEM768</code> for post-quantum key exchange,
+but still accepts TLS 1.0. Both are useful facts for a migration plan, and neither is visible in source code.</p>
+
+<h2>Limits</h2>
+<p>It is static, pattern-based analysis. It finds what code and configs say, not algorithms chosen at runtime or inside compiled
+dependencies. Pair it with a dependency SBOM and network observation for full coverage. The README credits IBM's
+sonar-cryptography and PQCA's CBOMkit, which do deeper, AST-based analysis for Java and Python. cbom-scan aims to be the quick,
+broad first pass.</p>
+
+<h2>Next</h2>
+<ul>
+  <li>Map crypto libraries in lockfiles (pip, npm, Maven, Go) to the algorithms they provide</li>
+  <li>Binary and container image scanning, plus SSH host and HSM/KMS key inventory</li>
+  <li>Pull request diff mode: "this change adds RSA-2048"</li>
+</ul>
+
+</article></div>
+<footer><div class="wrap"><span>© 2026 Shubham Saurabh</span><a href="../">Home</a></div></footer>
+</body>
+</html>
