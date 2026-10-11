@@ -26,27 +26,22 @@
   <a class="back" href="../#projects">← All projects</a>
   <p class="eyebrow">Case study · ML for AI security</p>
   <h1>Scoring AI agent actions before they run</h1>
-  <p class="lede">A fine-tuned ModernBERT encoder that looks at what an AI agent is about to do, what it says it is doing, and
-    the untrusted text around it, then returns a calibrated risk score. Built for SecretZero at SecurITaaS Pte Ltd.</p>
+  <p class="lede">A fine-tuned ModernBERT encoder that gives each AI agent action a calibrated risk score, so risky calls go to a
+    human. Built for SecretZero at SecurITaaS Pte Ltd.</p>
 </div></header>
 <div class="wrap"><article>
-<div class="note">This is proprietary SecurITaaS work, so this page covers the approach only. There is no public code, data or
-model, and product specifics are left out. I'm happy to go deeper in conversation.</div>
+<div class="note">Proprietary work, so this page covers the idea only, with no code or product details. Happy to go deeper in conversation.</div>
 
 <div class="facts">
   <div><b>149M</b><span>parameter encoder, three task heads</span></div>
-  <div><b>~200 ms</b><span>median latency on 4 CPU cores</span></div>
-  <div><b>0.92</b><span>recall on injected text spans (held-out)</span></div>
-  <div><b>0.111 → 0.039</b><span>calibration error after temperature scaling</span></div>
+  <div><b>~200 ms</b><span>on a standard CPU</span></div>
+  <div><b>Calibrated</b><span>scores with fail-closed fallback</span></div>
 </div>
 
-<h2>The problem</h2>
-<p>Rules can say which actions an agent may take, but not whether a specific call makes sense. An agent that was asked to
-remove access but quietly grants more, or one that obeyed an instruction hidden in a ticket or a tool output, can pass
-every static rule. The risk engine adds a second opinion: does this action match the stated intent, and did untrusted
-content try to steer it?</p>
-
-<h2>How it works</h2>
+<h2>What it does</h2>
+<p>Static rules decide which actions an agent may take, but not whether a particular call makes sense. The risk engine checks
+whether the action matches what the agent says it is doing, and whether untrusted content such as a ticket or a tool output
+tried to steer it. The score goes to a deterministic policy, and the model never grants permission on its own.</p>
 <div class="diagram" aria-label="Risk engine flow">
 <svg viewBox="0 0 720 230"><defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="d-arrow"/></marker></defs>
   <rect class="d-box" x="10" y="70" width="150" height="90" rx="10"/><text class="d-t" x="85" y="98" text-anchor="middle">Agent request</text>
@@ -61,36 +56,15 @@ content try to steer it?</p>
   <path class="d-line" d="M592 106C604 106 604 66 620 66" marker-end="url(#ar)"/><path class="d-line" d="M592 115H608" marker-end="url(#ar)"/><path class="d-line" d="M592 124C604 124 604 164 624 164" marker-end="url(#ar)"/>
 </svg>
 </div>
-<p>One shared encoder feeds three heads. A sequence head checks whether the stated intent and the action agree. A
-token-level head marks text that looks like an injected instruction, so the score can point at the exact span. A
-third pass reads the intent alone and predicts the operation, which gives an independent cross-check. The combined,
-calibrated score goes to a deterministic policy. The model adds friction but never grants permission on its own, and if
-it is unavailable, the system fails closed and asks a human.</p>
 
-<h2>How I trained it</h2>
+<h2>How I built it</h2>
 <ul>
-  <li><b>Labels by construction.</b> There was no labelled traffic, so every training example is generated in a way that fixes its label. For example, an injection is inserted into an untrusted field and its exact characters are labelled. No model ever decides a label.</li>
-  <li><b>No leakage.</b> Data is split by template, not by example. The test set only contains phrasings and attack patterns the model never saw in training.</li>
-  <li><b>Hard negatives.</b> Benign text full of trigger words ("ignore the warning", "override approved") is labelled clean, so the model cannot get by on keywords.</li>
-  <li><b>LLM paraphrases, validated.</b> A local LLM rewrote templates in many styles, from terse to formal to non-native English. Each rewrite was checked automatically before use and inherits its source template's split.</li>
-  <li><b>Licence-checked public data</b> added real-world injection attempts. A dataset with no stated licence was left out.</li>
-  <li><b>Production path:</b> temperature calibration, thresholds set on a separate calibration split, ONNX export, signed releases, and CPU serving.</li>
+  <li>Generated the training data myself, with labels built in by construction and test data the model never saw in any form.</li>
+  <li>Fine-tuned ModernBERT with three heads, including token-level detection of prompt-injection spans.</li>
+  <li>Calibrated, exported and served it on CPU, iterating over several versions to cut false alarms.</li>
 </ul>
 
-<h2>What went wrong, and what I changed</h2>
-<ul>
-  <li>The first run overfit. Training loss went to zero while held-out injection recall dropped. Fewer epochs, a lower learning rate and harder negatives fixed it.</li>
-  <li>INT8 quantization shifted the model's outputs too far to be usable, so it serves at full precision. Latency is about 200 ms on a CPU, which is fast enough for an approval path.</li>
-  <li>A real-world paraphrase triggered a false hold. Adding validated paraphrase data cut false holds on legitimate requests from 14% to 5% on the test set.</li>
-</ul>
-
-<h2>Limits</h2>
-<p>All results come from held-out synthetic templates. They show that the model generalizes to unseen phrasings, not that it
-catches every real attack. The next step is a human-labelled evaluation set from real traffic. Until then, the model's
-role is to route risky calls to a person, which is also the safe way to deploy any classifier in front of agents.</p>
-
-<div class="note">The public <a href="mcp-authz-gateway.html">mcp-authz-gateway</a> shows the enforcement side of the same
-idea: policy, human approval and audit for agent tool calls.</div>
+<div class="note">The public <a href="mcp-authz-gateway.html">mcp-authz-gateway</a> shows the enforcement side of the same idea.</div>
 </article></div>
 <footer><div class="wrap"><span>© 2026 Shubham Saurabh</span><a href="../">Home</a></div></footer>
 </body>

@@ -109,9 +109,8 @@
     <article class="card">
       <div class="kicker">ML for AI security · Built at SecurITaaS Pte Ltd</div>
       <h3>AI risk engine: a fine-tuned ModernBERT encoder</h3>
-      <p>Scores an AI agent's action before it runs. It checks whether the action matches the stated intent, marks prompt-injection
-        spans in untrusted context token by token, and returns a calibrated risk score that sends risky calls to a human.
-        I trained it from scratch with synthetic data, leakage-safe splits and calibration, and it serves on CPU at about 200 ms.</p>
+      <p>A fine-tuned ModernBERT encoder that scores each AI agent action before it runs, including token-level detection of
+        prompt injection, and sends risky calls to a human. I trained it end to end and serve it on CPU.</p>
       <div class="tags"><span class="tag">ModernBERT</span><span class="tag">PyTorch</span><span class="tag">Prompt injection</span><span class="tag">Calibration</span><span class="tag">ONNX</span></div>
       <div class="links"><a href="projects/risk-engine.html">Case study →</a><span style="color:var(--muted);font-weight:500">Proprietary, no public code</span></div>
     </article>
