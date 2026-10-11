@@ -58,7 +58,7 @@ h1 { font-size: clamp(32px, 6vw, 52px); line-height: 1.08; letter-spacing: -.025
   border-radius: var(--radius); overflow: hidden; margin: 8px 0 0; }
 @media (min-width: 820px) { .stats { grid-template-columns: repeat(4, 1fr); } }
 .stat { background: var(--surface); padding: 18px 20px; }
-.stat b { display: block; font-size: 26px; letter-spacing: -.02em; }
+.stat b { display: block; font-size: 22px; letter-spacing: -.02em; line-height: 1.25; margin-bottom: 4px; }
 .stat span { color: var(--muted); font-size: 14px; }
 
 /* sections */
